@@ -225,6 +225,7 @@ if ($indexulang < $count) {
                         var_dump($settPass[1]);
                         echo ("Tidak berhasil ganti ppw");
                         $indexulang = $indexulang + 1;
+                        deleteIsiEmail($idEmail);
                         goto ulang;
                     }
                 } else {
@@ -244,13 +245,16 @@ if ($indexulang < $count) {
             echo ("Gagal bikin akun karena otp slaah terus");
             $ulangotp = 0;
             $indexulang = $indexulang + 1;
+            deleteIsiEmail($idEmail);
             goto ulang;
         }
     } else {
         echo ("Gagal mengirim otp");
         $indexulang = $indexulang + 1;
+        deleteIsiEmail($idEmail);
         goto ulang;
     }
 } else {
     echo ("Selesai");
+    deleteIsiEmail($idEmail);
 }
