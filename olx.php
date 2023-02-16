@@ -1,4 +1,5 @@
 <?php
+error_reporting(0);
 function get($url, $headers, $put = null) {
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
@@ -12,6 +13,12 @@ function get($url, $headers, $put = null) {
     endif;
     curl_setopt($ch, CURLOPT_ENCODING, "GZIP");
     return curl_exec($ch);
+}
+
+function save($filename, $email) {
+    $save = fopen($filename, "a");
+    fputs($save, "$email");
+    fclose($save);
 }
 
 function post($url, $data, $headers, $put = null) {
@@ -59,8 +66,29 @@ function PACTHS($url, $data, $headers) {
     return $response;
 }
 
-function regis() {
-    $url = "https://api.internal.temp-mail.io/api/v3/email/ikbalange@coffeetimer24.com/messages";
+function sendOtp($email) {
+    $url = "https://api.olx.co.id/v2/auth/authenticate";
+    $data = '{"email":"' . $email . '","grantType":"email","language":"en","stop_otp_on_email":false}';
+    $headers = array();
+    $headers[] = "Host: api.olx.co.id";
+    $headers[] = "User-Agent: android 16.11.001 olxid";
+    $headers[] = 'x-origin-panamera: Production';
+    $headers[] = "Content-Type: application/json";
+    $headers[] = "Connection: Keep-Alive";
+    $headers[] = "Accept-Encoding: gzip";
+    $getotp = post($url, $data, $headers);
+    $json = json_decode($getotp, true);
+    $cheker = $json['status'];
+    if ($cheker == "PENDING") {
+        $token = $json['token'];
+        return [True, $token];
+    } else {
+        return [False, "0"];
+    }
+}
+
+function getOtp() {
+    $url = "https://api.internal.temp-mail.io/api/v3/email/de6mjhxzyg@waterisgone.com/messages";
     $headers = array();
     $headers[] = "Host: api.internal.temp-mail.io";
     $headers[] = "Cookie: _ga=GA1.2.145552877.1676454071; _gid=GA1.2.820485662.1676454071; _gat=1; __gads=ID=e63043c9098bfe92-2220fbc3ccd90028:T=1676454072:RT=1676454072:S=ALNI_MZaTv0iK43soMHbLSVUcZNspJFNGA; __gpi=UID=000009ae4188605f:T=1676454072:RT=1676454072:S=ALNI_MaMTznUygYQ3dKycvYXO6QjWQ6yDg";
@@ -72,12 +100,61 @@ function regis() {
     $headers[] = 'Accept-Language: en-US,en;q=0.9';
     $getotp = get($url, $headers);
     $json = json_decode($getotp, true);
-    var_dump($json[0]['id']);
+    $idEmail = $json[0]['id'];
+    if ($idEmail != null) {
+        $isiemail = $json[0]['body_text'];
+        $regex = "/\d\d\d\d/";
+        preg_match($regex, $isiemail, $hasil);
+        return [True, $hasil[0], $idEmail];
+    } else {
+        return [False, "0"];
+    }
 }
 
-function relet() {
-    $url = "https://api.internal.temp-mail.io/api/v3/message/e1dbe42b-e294-454e-ae03-5ff617c4dccd";
-    $data = '{"token":"2goCZbz4pxciXOS1U2dQ"}';
+function inputpin($email, $pin, $token) {
+    $url = "https://api.olx.co.id/v2/auth/authenticate";
+    $data = '{"code":"' . $pin . '","email":"' . $email . '","grantType":"pin","metadata":{"deviceInfo":"' . $token . '"}}';
+    $headers = array();
+    $headers[] = "Host: api.olx.co.id";
+    $headers[] = "Authorization: Bearer $token";
+    $headers[] = 'User-Agent: android 17.00.002 olxid';
+    $headers[] = "Content-Type: application/json";
+    $headers[] = "Connection: Keep-Alive";
+    $headers[] = "Accept-Encoding: gzip";
+    $getotp = post($url, $data, $headers);
+    $json = json_decode($getotp, true);
+    $aksestoken = $json['accessToken'];
+    if ($aksestoken != null) {
+        $iduser = $json['user']['id'];
+        return [True, $aksestoken, $iduser];
+    } else {
+        return [False, "0", $getotp];
+    }
+}
+
+function settPass($idUser, $aksestoken) {
+    $url = "https://api.olx.co.id/api/v1/users/$idUser";
+    $data = '{"data":{"password":"viola331","passwordConfirmation":"viola331"}}';
+    $headers = array();
+    $headers[] = "Host: api.olx.co.id";
+    $headers[] = "Authorization: Bearer $aksestoken";
+    $headers[] = 'User-Agent: android 17.00.002 olxid';
+    $headers[] = "Content-Type: application/json";
+    $headers[] = "Connection: Keep-Alive";
+    $headers[] = "Accept-Encoding: gzip";
+    $getotp = PACTHS($url, $data, $headers);
+    $json = json_decode($getotp, true);
+    $cheker = $json['data']['status'];
+    if ($cheker == "confirmed") {
+        return [True, $json];
+    } else {
+        return [False, $json];
+    }
+}
+
+function deleteIsiEmail($idEmail) {
+    $url = "https://api.internal.temp-mail.io/api/v3/message/$idEmail";
+    $data = '{"token":"FfAmqSWwNmjPuyhg3me9"}';
     $headers = array();
     $headers[] = "Host: api.internal.temp-mail.io";
     $headers[] = "Cookie: _ga=GA1.2.145552877.1676454071; _gid=GA1.2.820485662.1676454071; __gads=ID=e63043c9098bfe92-2220fbc3ccd90028:T=1676454072:RT=1676454072:S=ALNI_MZaTv0iK43soMHbLSVUcZNspJFNGA; __gpi=UID=000009ae4188605f:T=1676454072:RT=1676454072:S=ALNI_MaMTznUygYQ3dKycvYXO6QjWQ6yDg; _gat=1";
@@ -90,43 +167,90 @@ function relet() {
     $headers[] = 'Accept-Language: en-US,en;q=0.9';
     $getotp = diliti($url, $data, $headers);
     $json = json_decode($getotp, true);
-    var_dump($json);
+    $cheker = $json['message'];
+    if ($cheker != 'tempmail: message not found') {
+        return True;
+    } else {
+        return False;
+    }
 }
 
-function inputpin() {
-    $url = "https://www.olx.co.id/api/auth/authenticate/login";
-    $data = '{"grantType":"pin","code":"3333","email":"wwefewfwewwe@gmail.com","language":"id","metadata":{"deviceInfo":"eyJicm93c2VyIjoiQ2hyb21lIiwicGxhdGZvcm0iOiJXZWItZGVza3RvcDogV2luZG93cyAxMCIsImNpdHlOYW1lIjoiSmFrYXJ0YSBQdXNhdCIsInN0YXRlIjoiSmFrYXJ0YSBELksuSS4iLCJsb2NhdGlvbiI6eyJsYXQiOi02LjE5MzQ1NjIsImxvbmciOjEwNi44NTAyODc5fX0="}}';
-    $headers = array();
-    $headers[] = "Host: www.olx.co.id";
-    $headers[] = "Authorization: Bearer eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCIsImtpZCI6ImViT21QTmlrIn0.eyJncmFudF90eXBlIjoiZW1haWwiLCJjbGllbnRfdHlwZSI6IndlYiIsInNpdGVfY29kZSI6Im9seGlkIiwidG9rZW5fdHlwZSI6ImNvbmZpcm1hdGlvblRva2VuIiwiaXNfbmV3X3VzZXIiOnRydWUsImltYWdlX3VybCI6IiIsImxhbmd1YWdlIjoiaWQiLCJlbWFpbCI6Ind3ZWZld2Z3ZXd3ZUBnbWFpbC5jb20iLCJpYXQiOjE2NzY0NTU2MTgsImV4cCI6MTY3NjQ1NzQxOCwiYXVkIjoib2x4aWQiLCJpc3MiOiJvbHgiLCJzdWIiOiIiLCJqdGkiOiI1NzYxNGE5ZmY4ZWQ3MWMxZGFlMTZiMzRlOWQ5MDAyM2U4MzgxNGU1In0.enmNC39ceSLjHmXJrBnbADsekRkOS4hTYQfGx982rYz8Ng-gYhzKuCSPDtXWSNRcy4v1CkXu1Y4TxAVX7ofv3ybdXS3jXzgp7Qg1Ac1LTXgkbxsiuaSXoQQrj0dB9EiLGRC5_gxDGBqdbfS9wNyzc8tcft7drGozMp61ta81usreSNl6yltNcmS0pNnXxxQpM3LxGHvJkFl5HI36oFMNIOgvNusxqAlarmyLvG2L4i3uZlOaaVr-Nyg7X3mzMAHlklK2eVP57vJqz10jbVqSBo_oPJ5gf1dEzA87atrtip2-fjmtAUgLAe70MgPs1bTe-G2ScyUpKvU_xvtT9n377g";
-    $headers[] = 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36';
-    $headers[] = "Content-Type: application/json";
-    $headers[] = "Accept: */*";
-    $headers[] = "Origin: https://www.olx.co.id";
-    $headers[] = "Referer: https://www.olx.co.id/item/laptop-asus-a442u-i5-gen-8-ram-8gb-ssd-120gb-iid-886733379";
-    $headers[] = "Accept-Encoding: gzip, deflate";
-    $headers[] = 'Accept-Language: en-US,en;q=0.9';
-    $getotp = post($url, $data, $headers);
-    $json = json_decode($getotp, true);
-    var_dump($getotp);
-}
+$ulangotp = 0;
+$indexulang = 0;
 
-function pweyy() {
-    $url = "https://www.olx.co.id/api/users/125381503";
-    $data = '{"data":{"password":"viola331","passwordConfirmation":"viola331"}}';
-    $headers = array();
-    $headers[] = "Host: www.olx.co.id";
-    $headers[] = "Authorization: Bearer eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCIsImtpZCI6ImViT21QTmlrIn0.eyJncmFudFR5cGUiOiJwaW4iLCJjbGllbnRUeXBlIjoid2ViIiwidG9rZW5UeXBlIjoiYWNjZXNzVG9rZW4iLCJpc05ld1VzZXIiOmZhbHNlLCJpYXQiOjE2NzY0NTY5OTIsImV4cCI6MTY3NjQ1Nzg5MiwiYXVkIjoib2x4aWQiLCJpc3MiOiJvbHgiLCJzdWIiOiIxMjUzODE1MDMiLCJqdGkiOiI2OWFmZDRkMjI2NzM0ZDNjOWVmODUxNjhmMDRhMzU5OWRlODdiN2JiIn0.l6xlKQZrGNMP0v1UMfMT8AkVjOvEek3OwculrF6hv7r83Uicq9TPvBtmpMvSAKfoURML6m6Ck2l94jZFq_K5dfwT211dRsJ6xc9imgMqL-t2bbXr_YU07jZZzNNWQx2foHYYp4ZZPnH9Qqzm6iU7soJmLXw4KtTb9pBMZp4W6MXTF1rP2KcTE-oidhdgc133fsKpNmXQHefT2P9QgdEyT3qklZpkxApiEVfdFPtmLEIk_9XOkpQa66VSi---S7qHLIMiW82LyBqI5ESEnMJIK32_DLbP5mpJemqma7QgUdVsNyEivp6lsMnMijNde0XWTXse1QTdcPICkO7Q3FowDA";
-    $headers[] = 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36';
-    $headers[] = "Content-Type: application/json";
-    $headers[] = "Accept: */*";
-    $headers[] = "Origin: https://www.olx.co.id";
-    $headers[] = "Referer: https://www.olx.co.id/item/laptop-asus-a442u-i5-gen-8-ram-8gb-ssd-120gb-iid-886733379";
-    $headers[] = "Accept-Encoding: gzip, deflate";
-    $headers[] = 'Accept-Language: en-US,en;q=0.9';
-    $getotp = PACTHS($url, $data, $headers);
-    $json = json_decode($getotp, true);
-    var_dump($json);
-}
+$data = file_get_contents("ex.txt");
+$list = explode("\n", str_replace("\r", "", $data));
+$count = count($list);
 
-inputpin();
+ulang:
+if ($indexulang < $count) {
+    # code...
+    $emailni = $list[$indexulang];
+    $sendOtp = sendOtp($emailni);
+    if ($sendOtp[0] == True) {
+        $token = $sendOtp[1];
+        //echo ("$emailni \n");
+        //echo ("$token \n");
+        //echo ("Menunggu otp masuk");
+        ulangotp:
+        if ($ulangotp <= 5) {
+            $getOtp = getOtp();
+            if ($getOtp[0] == True) {
+                $pin = $getOtp[1];
+                $idEmail = $getOtp[2];
+                //echo ("$pin \n");
+                $inputpin = inputpin($emailni, $pin, $token);
+                if ($inputpin[0] == True) {
+                    $aksestoken = $inputpin[1];
+                    $idUser = $inputpin[2];
+                    // echo ($aksestoken);
+                    //echo ($idUser);
+                    $settPass = settPass($idUser, $aksestoken);
+                    if ($settPass == True) {
+                        //  echo ("Berhasil ganti pw");
+                        $deleteIsiEmail = deleteIsiEmail($idEmail);
+                        if ($deleteIsiEmail = True) {
+                            $result = ("$emailni|viola331|$idUser \n");
+                            save("Hasil.txt", $result);
+                            echo ("$indexulang. $result");
+                            $ulangotp = 0;
+                            $indexulang = $indexulang + 1;
+                            goto ulang;
+                        } else {
+                            echo ("Gagal delete isi email");
+                            $indexulang = $indexulang + 1;
+                            goto ulang;
+                        }
+                    } else {
+                        var_dump($settPass[1]);
+                        echo ("Tidak berhasil ganti ppw");
+                        $indexulang = $indexulang + 1;
+                        goto ulang;
+                    }
+                } else {
+                    echo ("gagal input pin");
+                    echo ($inputpin[2]);
+                    $indexulang = $indexulang + 1;
+                    deleteIsiEmail($idEmail);
+                    goto ulang;
+                }
+            } else {
+                sleep(1);
+                //echo ("Tidak berhasil dpt otp");
+                $ulangotp = $ulangotp + 1;
+                goto ulangotp;
+            }
+        } else {
+            echo ("Gagal bikin akun karena otp slaah terus");
+            $ulangotp = 0;
+            $indexulang = $indexulang + 1;
+            goto ulang;
+        }
+    } else {
+        echo ("Gagal mengirim otp");
+        $indexulang = $indexulang + 1;
+        goto ulang;
+    }
+} else {
+    echo ("Selesai");
+}
