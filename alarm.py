@@ -148,5 +148,7 @@ def getIdUtama(coki):
 
 value = True
 while (value):
-    getIdUtama("tKXU_pZja341d6IgmZ1K2pvKcUfDuTzZph9-rm5X6o-9EnwVbtuf!424957020")
-
+    try:
+        getIdUtama("tKXU_pZja341d6IgmZ1K2pvKcUfDuTzZph9-rm5X6o-9EnwVbtuf!424957020")
+    except:
+        print("ERORRR NYETT")
