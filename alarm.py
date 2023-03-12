@@ -54,7 +54,7 @@ def getIdUtama(coki):
                     print(l2)
                     print(l3)
                     print(l4)
-                    save("SUDAHH PENUH BOSSS 4 = (5)")
+                    tele("SUDAHH PENUH BOSSS 4 = (5)")
                     if float(l5) <j:
                         print("Kondisi 5 penuh -> i=5")
                         print(l1)
@@ -62,7 +62,7 @@ def getIdUtama(coki):
                         print(l3)
                         print(l4)
                         print(l5)
-                        save("SUDAHH PENUH BOSSS 5 = (10)")
+                        tele("SUDAHH PENUH BOSSS 5 = (10)")
                         if float(l6) <j:
                             print("Kondisi 6 penuh -> i=6")
                             print(l1)
@@ -71,7 +71,7 @@ def getIdUtama(coki):
                             print(l4)
                             print(l5)
                             print(l6)
-                            save("SUDAHH PENUH BOSSS 6 = (20)")
+                            tele("SUDAHH PENUH BOSSS 6 = (20)")
                             if float(l7) <j:
                                 print("Kondisi 7 penuh -> i=7")
                                 print(l1)
@@ -81,7 +81,7 @@ def getIdUtama(coki):
                                 print(l5)
                                 print(l6)
                                 print(l7)
-                                save("SUDAHH PENUH BOSSS 7 = (40)")
+                                tele("SUDAHH PENUH BOSSS 7 = (40)")
                                 if float(l8) <j:
                                     print("Kondisi 8 penuh -> i=8")
                                     print(l1)
@@ -92,7 +92,7 @@ def getIdUtama(coki):
                                     print(l6)
                                     print(l7)
                                     print(l8)
-                                    save("SUDAHH PENUH BOSSS 8 = (80)")
+                                    tele("SUDAHH PENUH BOSSS 8 = (80)")
                                 else:
                                     print("Kondisi 8 blom")
                                     print(l1)
