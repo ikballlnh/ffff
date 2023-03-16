@@ -18,7 +18,7 @@ function request1($url, $headers, $put = null)
 
 function cek()
 {
-    $url = "https://gs15.pragmaticplaylive.net/api/ui/statisticHistory?tableId=spacemanyxeabn02&numberOfGames=10&JSESSIONID=5W_dt9megB_PogWWTGP1MMyU1G4DzaJRc7DVSe8kKjoOW2TZ24zY!-1041750275&ck=1678453708044&game_mode=lobby_desktop";
+    $url = "https://gs15.pragmaticplaylive.net/api/ui/statisticHistory?tableId=spacemanyxeabn02&numberOfGames=500&JSESSIONID=r7jlfHsqz2HYJLl8XSHAj_xEOES8fLAyHfOa8I1_Ab6XGlZdnhl8!-1217578290&ck=1678453708044&game_mode=lobby_desktop";
     $headers = array();
     $getotp = request1($url, $headers);
     $json = json_decode($getotp, true);
@@ -41,31 +41,31 @@ function cek()
                 echo("KONDISI 1 PENUH => I=1 \n");
                 if ($l2 < $f) {
                     echo("KONDISI 2 PENUH => I=2 \n");
-                    tele("KONDISI 2 UDH PENUH (2)");
+                    #tele("KONDISI 2 UDH PENUH (2)");
                     if ($l3 < $f) {
                         echo("KONDISI 3 PENUH => I=3 \n");
-                        #tele("KONDISI 3 UDH PENUH (5)");
+                        ##tele("KONDISI 3 UDH PENUH (5)");
                         if ($l4 < $f) {
                             echo("KONDISI 4 PENUH => I=4 \n");
-                            #tele("KONDISI 4 UDH PENUH (10)");
+                            ##tele("KONDISI 4 UDH PENUH (10)");
                             if ($l5 < $f) {
                                 echo("KONDISI 5 PENUH => I=5 \n");
-                                #tele("KONDISI 5 UDH PENUH (20)");
+                                ##tele("KONDISI 5 UDH PENUH (20)");
                                 if ($l6 < $f) {
                                     echo("KONDISI 6 PENUH => I=6 \n");
-                                    #tele("KONDISI 6 UDH PENUH (40)");
+                                    ##tele("KONDISI 6 UDH PENUH (40)");
                                     if ($l7 < $f) {
                                         echo("KONDISI 7 PENUH => I=7 \n");
-                                        #tele("KONDISI 7 UDH PENUH (80)");
+                                        ##tele("KONDISI 7 UDH PENUH (80)");
                                         if ($l8 < $f) {
                                             echo("KONDISI 8 PENUH => I=8 \n");
-                                            #tele("KONDISI 8 UDH PENUH (160)");
+                                            ##tele("KONDISI 8 UDH PENUH (160)");
                                             if ($l9 < $f) {
                                                 echo("KONDISI 9 PENUH => I=9 \n");
-                                                #tele("KONDISI 9 UDH PENUH (320)");
+                                                ##tele("KONDISI 9 UDH PENUH (320)");
                                                 if ($l10 < $f) {
                                                     echo("KONDISI 10 PENUH => I=10 \n");
-                                                    #tele("KONDISI 10 UDH PENUH (640)");
+                                                    ##tele("KONDISI 10 UDH PENUH (640)");
                                                 } else {
                                                     echo("KONDISI 10 BLOM \n");
                                                 }
